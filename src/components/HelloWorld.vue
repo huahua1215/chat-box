@@ -2,6 +2,7 @@
 import { ref, nextTick } from "vue";
 export default {
   setup() {
+    const messageDisplay = ref(null);
     const bobMessage = ref("");
     const youMessage = ref("");
     const messages = ref([
@@ -32,14 +33,16 @@ export default {
         alert("something went wrong");
       }
       nextTick(() => {
-        let messageDisplay = this.$refs.chatArea;
-        messageDisplay.scrollTop = messageDisplay.scrollHeight;
+        if (messageDisplay.value) {
+          messageDisplay.value.scrollTop = messageDisplay.value.scrollHeight;
+        }
       });
     };
     const clearAllMessages = () => {
       messages.value = [];
     };
     return {
+      messageDisplay,
       bobMessage,
       youMessage,
       messages,
@@ -55,12 +58,12 @@ export default {
 
   <main id="app">
     <section
-      ref="chatArea"
+      ref="messageDisplay"
       class="bg-white h-96 p-8 overflow-auto max-w-screen-sm mx-auto mb-8 shadow"
     >
       <p
         v-for="message in messages"
-        class="rounded-xl p-2 text-sm"
+        class="rounded-xl p-2 text-sm my-5"
         :class="{
           'bg-blue text-white ml-50percent': message.author === 'you',
           'bg-gray text-black mr-50percent': message.author !== 'you',
